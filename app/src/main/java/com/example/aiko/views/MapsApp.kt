@@ -22,30 +22,28 @@ import com.google.maps.android.compose.rememberCameraPositionState
 fun MapsApp(viewModel: PositionViewModel) {
 
     val positionMaps by viewModel.position.observeAsState(null)
+    val stopBus by viewModel.stopBus.observeAsState(null)
 
     LaunchedEffect(Unit) {
         viewModel.fetchPosition()
+        viewModel.fetchStopBus()
     }
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(-23.85093875, -46.70703), 13f)
     }
 
-    var px = positionMaps?.l?.flatMap { l -> l.vs.map { v -> Pair(v.px, l.lt0) } }
-    var py = positionMaps?.l?.flatMap { l -> l.vs.map { v -> Pair(v.py, l.lt1) } }
-    var lt0 = positionMaps?.l?.map { it.lt0 + " - " + it.lt1 }
+    var px = positionMaps?.l?.flatMap { l -> l.vs.map { v -> Pair(v.px, l.lt0) } } //l.lt0 = ida
+    var py = positionMaps?.l?.flatMap { l -> l.vs.map { v -> Pair(v.py, l.lt1) } } //l.lt1 = volta
     var avgPy = py?.toList()
     var avgPx = px?.toList()
-//    var combined = avgPx?.zip(avgPy ?: listOf())?.zip(lt0 ?: listOf()){
-//        (px, py), lt0 -> Triple(px, py, lt0)
-//    }
+    var stop = stopBus?.map { it }
 
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState,
     ) {
         avgPx?.zip(avgPy ?: listOf())?.forEachIndexed {index, (px, py) ->
-            println(px.first.toString() + " - " + px.second + " - " + py)
             Marker(
                 state = MarkerState(position = LatLng(py.first, px.first)),
                 title = "IDA: ${px.second}",
@@ -53,19 +51,13 @@ fun MapsApp(viewModel: PositionViewModel) {
                 icon = BitmapDescriptorFactory.fromResource(R.drawable.bus)
             )
         }
-//        combined?.forEach { (px, py, lt0) ->
-//            println(lt0 + " - " + px + " - " + py)
-//            Marker(
-//                state = MarkerState(position = LatLng(py, px)),
-//                title = "IDA: ${lt0.substringBefore(" - ")}",
-//                snippet = "VOLTA: ${lt0.substringAfter(" - ")}",
-//                icon = BitmapDescriptorFactory.fromResource(R.drawable.bus)
-//            )}
-//        Marker(
-//            state = MarkerState(position = LatLng(-23.85093875, -46.70703)),
-//            title = "Name of city",
-//            snippet = "Description of city",
-//            icon = BitmapDescriptorFactory.fromResource(R.drawable.bus)
-//        )
+        stop?.forEach {
+            Marker(
+                state = MarkerState(position = LatLng(it.py, it.px)),
+                title = it.np,
+                snippet = it.ed,
+                icon = BitmapDescriptorFactory.fromResource(R.drawable.stopbus)
+            )
+        }
     }
 }

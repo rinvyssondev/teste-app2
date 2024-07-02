@@ -7,4 +7,6 @@ class PositionRepository() {
     private val positionRepository = ApiClient.apiService
 
     suspend fun getPosition() = positionRepository.getPosition()
+
+    suspend fun getStopBus() = positionRepository.getStopBus()
 }

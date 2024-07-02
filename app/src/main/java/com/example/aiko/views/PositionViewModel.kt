@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.aiko.data.model.Position
+import com.example.aiko.data.model.StopBusItem
+import com.example.aiko.data.remote.ApiClient
+import com.example.aiko.data.remote.ApiService
 import com.example.aiko.data.repository.PositionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,10 +21,20 @@ class PositionViewModel() : ViewModel() {
     private val _position = MutableLiveData<Position>()
     val position: MutableLiveData<Position> = _position
 
+    private val _stopBus = MutableLiveData<List<StopBusItem>>()
+    val stopBus: MutableLiveData<List<StopBusItem>> = _stopBus
+
     fun fetchPosition() {
         viewModelScope.launch(Dispatchers.IO) {
             val response = repository.getPosition()
             _position.postValue(response)
+        }
+    }
+
+    fun fetchStopBus() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = repository.getStopBus()
+            _stopBus.postValue(response)
         }
     }
 }
