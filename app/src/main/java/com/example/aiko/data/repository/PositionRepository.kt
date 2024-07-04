@@ -9,4 +9,6 @@ class PositionRepository() {
     suspend fun getPosition() = positionRepository.getPosition()
 
     suspend fun getStopBus() = positionRepository.getStopBus()
+
+    suspend fun postAuth() = positionRepository.postAuth()
 }
