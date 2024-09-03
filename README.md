@@ -1,8 +1,6 @@
-# Teste Android
+# Teste Android - 3 dias para fazer o teste.
 
 ![Aiko](imagens/aiko.png)
-
-3 dias para fazer o teste.
 
 Neste teste serão avaliados seus conhecimentos e a metodologia aplicada no desenvolvimento de aplicações mobile Android.
 
