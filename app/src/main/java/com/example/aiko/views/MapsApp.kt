@@ -3,6 +3,7 @@ package com.example.aiko.views
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -23,8 +24,10 @@ fun MapsApp(viewModel: PositionViewModel) {
 
     val positionMaps by viewModel.position.observeAsState(null)
     val stopBus by viewModel.stopBus.observeAsState(null)
+    val auth by viewModel.auth.collectAsState(null)
 
     LaunchedEffect(Unit) {
+        viewModel.fetchAuth()
         viewModel.fetchPosition()
         viewModel.fetchStopBus()
     }

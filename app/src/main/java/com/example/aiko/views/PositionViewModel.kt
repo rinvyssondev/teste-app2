@@ -24,6 +24,16 @@ class PositionViewModel() : ViewModel() {
     private val _stopBus = MutableLiveData<List<StopBusItem>>()
     val stopBus: MutableLiveData<List<StopBusItem>> = _stopBus
 
+    private val _auth = MutableStateFlow<Boolean>(false)
+    val auth: StateFlow<Boolean> = _auth
+
+
+    fun fetchAuth() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = repository.postAuth()
+            _auth.value = response
+        }
+    }
     fun fetchPosition() {
         viewModelScope.launch(Dispatchers.IO) {
             val response = repository.getPosition()
